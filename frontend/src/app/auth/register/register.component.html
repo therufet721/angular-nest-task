@@ -1,0 +1,68 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Register</h1>
+    
+    <form (ngSubmit)="onSubmit()" class="auth-form">
+      @if (errorMessage()) {
+        <div class="error-message">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div class="success-message">
+          {{ successMessage() }}
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="login">Login</label>
+        <input
+          type="text"
+          id="login"
+          [(ngModel)]="login"
+          name="login"
+          placeholder="Enter your login (min 3 characters)"
+          [disabled]="isLoading()"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Enter your password (min 6 characters)"
+          [disabled]="isLoading()"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          placeholder="Confirm your password"
+          [disabled]="isLoading()"
+        />
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <span class="spinner"></span>
+          Registering...
+        } @else {
+          Register
+        }
+      </button>
+    </form>
+
+    <p class="auth-link">
+      Already have an account? <a routerLink="/auth/login">Login</a>
+    </p>
+  </div>
+</div>

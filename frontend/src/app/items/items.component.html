@@ -1,0 +1,95 @@
+<div class="items-container">
+  <header class="header">
+    <div class="header-content">
+      <h1>Items Catalog</h1>
+      <div class="user-info">
+        @if (user()) {
+          <span class="user-name">Welcome, {{ user()?.login }}</span>
+        }
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    @if (errorMessage()) {
+      <div class="error-message">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <div class="controls">
+      <div class="page-size-selector">
+        <label for="pageSize">Items per page:</label>
+        <select id="pageSize" [(ngModel)]="limit" (change)="onLimitChange()" [disabled]="isLoading()">
+          @for (size of pageSizeOptions; track size) {
+            <option [value]="size">{{ size }}</option>
+          }
+        </select>
+      </div>
+      <div class="total-info">
+        Total items: {{ totalDocs() }}
+      </div>
+    </div>
+
+    @if (isLoading()) {
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading items...</p>
+      </div>
+    } @else {
+      <div class="items-table-container">
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of items(); track item._id) {
+              <tr>
+                <td class="item-name">{{ item.name }}</td>
+                <td class="item-description">{{ item.description }}</td>
+                <td class="item-category">
+                  <span class="category-badge">{{ item.category?.name || 'N/A' }}</span>
+                </td>
+                <td class="item-price">${{ item.price.toFixed(2) }}</td>
+                <td class="item-quantity">{{ item.quantity }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="empty-message">No items found</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination">
+        <button 
+          class="btn-page" 
+          (click)="prevPage()" 
+          [disabled]="!hasPrevPage() || isLoading()"
+        >
+          ← Previous
+        </button>
+        
+        <div class="page-info">
+          Page {{ currentPage() }} of {{ totalPages() }}
+        </div>
+        
+        <button 
+          class="btn-page" 
+          (click)="nextPage()" 
+          [disabled]="!hasNextPage() || isLoading()"
+        >
+          Next →
+        </button>
+      </div>
+    }
+  </main>
+</div>
